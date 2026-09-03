@@ -1,0 +1,2 @@
+# Dane aplikacji - NIGDY nie trafiają do repozytorium (poufne, generowane w runtime)
+data/

@@ -1,0 +1,15 @@
+[Unit]
+Description=EcoPro - Ewidencja Czasu Pracy
+After=network.target
+
+[Service]
+Type=simple
+User=USTAW_SWOJEGO_USERA
+WorkingDirectory=/opt/ecopro-ewidencja
+Environment=PORT=3001
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
