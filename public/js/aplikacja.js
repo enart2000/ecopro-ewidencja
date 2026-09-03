@@ -79,6 +79,7 @@ function renderView(){
     case 'userpanel': return renderUserPanel();
     case 'summary': return renderSummaryView(S.summaryYm || prevMonth(monthStr(new Date())));
     case 'log': return renderLogView();
+    case 'changelog': return renderChangelogView();
     default: return renderDashboard();
   }
 }
@@ -105,6 +106,7 @@ function renderDashboard(){
       ${isAdminLike(u) ? `<button class="btn" onclick="goView('userpanel')">👤 Panel użytkowników</button>` : ''}
       <button class="btn" onclick="openSummary('${prevMonth(monthStr(new Date()))}')">📊 Podsumowanie miesięczne</button>
       ${isAdminLike(u) ? `<button class="btn" onclick="goView('log')">📜 Dziennik zdarzeń</button>` : ''}
+      ${isAdminLike(u) ? `<button class="btn" onclick="goView('changelog')">🗂️ Historia zmian</button>` : ''}
       ${u.isManager ? `<button class="btn btn-teal" onclick="openTransferModal()">⇄ Przekaż rangę managera</button>` : ''}
     </div>
   `;
@@ -144,6 +146,41 @@ function renderLogView(){
         </table>
       </div>
     </div>
+  `;
+}
+
+/* ============================================================
+   HISTORIA ZMIAN (changelog aplikacji — tylko admin / superadmin)
+   WYŁĄCZNIE do odczytu: dane pochodzą ze stałej listy w zmiany.js,
+   na stronie nie ma żadnego formularza ani przycisku pozwalającego
+   coś tu dodać, zmienić czy usunąć.
+   ============================================================ */
+function renderChangelogView(){
+  const u = S.session;
+  if(!isAdminLike(u)){
+    return `<div class="backlink" onclick="goView('dashboard')">← Panel główny</div><div class="empty">Historia zmian jest dostępna tylko dla administratorów.</div>`;
+  }
+  const rows = CHANGELOG.map(entry=>{
+    const cat = CHANGELOG_CATEGORIES[entry.category] || {label: entry.category, color: 'var(--ink-dim)'};
+    return `
+    <div class="panel" style="padding:16px 18px; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+        <div>
+          <span class="pill" style="border-color:${cat.color}; color:${cat.color}; margin-right:8px;">${escapeHtml(cat.label)}</span>
+          <b style="font-size:15px;">${escapeHtml(entry.title)}</b>
+        </div>
+        <span class="mono" style="color:var(--ink-dim); font-size:12px; white-space:nowrap;">${humanDate(entry.date)}</span>
+      </div>
+      <p style="color:var(--ink-dim); font-size:13.5px; margin:8px 0 0;">${escapeHtml(entry.description)}</p>
+    </div>`;
+  }).join('');
+  return `
+    <div class="backlink" onclick="goView('dashboard')">← Panel główny</div>
+    <div class="panel-head">
+      <h2>🗂️ Historia zmian</h2>
+      <span class="small-note">${CHANGELOG.length} wpisów · tylko do odczytu</span>
+    </div>
+    ${rows || '<div class="empty">Brak wpisów.</div>'}
   `;
 }
 
