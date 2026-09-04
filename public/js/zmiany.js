@@ -24,7 +24,7 @@ const CHANGELOG_CATEGORIES = {
 
 const CHANGELOG = [
   { date:'2026-09-04', category:'wyglad', title:'Ikona strony (favicon) w karcie przeglądarki',
-    description:'Dodano ikonę EcoPro (sam znak fal z logo, bez tekstu) widoczną w karcie przeglądarki zamiast domyślnej, pustej ikony pliku.' },
+    description:'Dodano ikonę widoczną w karcie przeglądarki (prosty, kontrastowy zegar w kolorze marki) zamiast domyślnej, pustej ikony pliku.' },
   { date:'2026-09-04', category:'infrastruktura', title:'SSL i własna domena',
     description:'Strona działa teraz pod własnym adresem (ecopro-ewidencja.ddns.net) z szyfrowanym połączeniem HTTPS zamiast wcześniejszego dostępu po adresie IP przez zwykłe, niezabezpieczone HTTP.' },
   { date:'2026-09-04', category:'funkcja', title:'Kody dla pracowników i osobny widok listy pracowników',
