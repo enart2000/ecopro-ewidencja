@@ -80,6 +80,7 @@ function renderView(){
     case 'summary': return renderSummaryView(S.summaryYm || prevMonth(monthStr(new Date())));
     case 'log': return renderLogView();
     case 'changelog': return renderChangelogView();
+    case 'employees': return renderEmployeesView();
     default: return renderDashboard();
   }
 }
@@ -104,9 +105,11 @@ function renderDashboard(){
     </div>
     <div class="row-actions" style="margin-top:22px;">
       ${isAdminLike(u) ? `<button class="btn" onclick="goView('userpanel')">👤 Panel użytkowników</button>` : ''}
+      ${(isAdminLike(u) || u.isManager) ? `<button class="btn" onclick="goView('employees')">👥 Lista pracowników</button>` : ''}
       <button class="btn" onclick="openSummary('${prevMonth(monthStr(new Date()))}')">📊 Podsumowanie miesięczne</button>
       ${isAdminLike(u) ? `<button class="btn" onclick="goView('log')">📜 Dziennik zdarzeń</button>` : ''}
       ${isAdminLike(u) ? `<button class="btn" onclick="goView('changelog')">🗂️ Historia zmian</button>` : ''}
+      ${u.isManager ? `<button class="btn" onclick="openGenerateEmployeeCodeModal()">🎫 Kod dla nowego pracownika</button>` : ''}
       ${u.isManager ? `<button class="btn btn-teal" onclick="openTransferModal()">⇄ Przekaż rangę managera</button>` : ''}
     </div>
   `;
@@ -262,8 +265,7 @@ function renderHoursView(){
     </div>
     <p style="color:var(--ink-dim); font-size:13.5px; margin-top:-8px; margin-bottom:16px;">${humanDate(S.currentDate)}</p>
     ${!editable ? `<div class="okbox">Widok tylko do odczytu — Twoja ranga (${roleLabel(u.role)}) nie pozwala na edycję godzin.</div>` : ''}
-    ${activeEmployees.length===0 ? `<div class="empty">Brak pracowników na liście. ${isAdminLike(u)||u.isManager ? 'Dodaj pierwszego pracownika poniżej.' : ''}</div>` : rows}
-    ${(isAdminLike(u) || u.isManager) ? renderEmployeeManager() : ''}
+    ${activeEmployees.length===0 ? `<div class="empty">Brak pracowników na liście. ${isAdminLike(u)||u.isManager ? 'Dodaj pracownika w sekcji „Lista pracowników” w Panelu głównym.' : ''}</div>` : rows}
   `;
 }
 
@@ -289,6 +291,18 @@ async function useStandardDeparture(empId){
   await updateHourField(empId, 'departure', emp.standardDeparture);
 }
 
+
+function renderEmployeesView(){
+  const u = S.session;
+  if(!(isAdminLike(u) || u.isManager)){
+    return `<div class="backlink" onclick="goView('dashboard')">← Panel główny</div><div class="empty">Lista pracowników jest dostępna tylko dla managera i administratorów.</div>`;
+  }
+  return `
+    <div class="backlink" onclick="goView('dashboard')">← Panel główny</div>
+    <h1 style="font-size:22px; margin-bottom:16px;">👥 Lista pracowników</h1>
+    ${renderEmployeeManager()}
+  `;
+}
 
 function renderEmployeeManager(){
   const rows = S.employees.map(emp=>`

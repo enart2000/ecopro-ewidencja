@@ -23,6 +23,8 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-04', category:'funkcja', title:'Kody dla pracowników i osobny widok listy pracowników',
+    description:'Manager może teraz sam wygenerować kod dostępu ograniczony wyłącznie do rangi Pracownik (bez dostępu do pełnego panelu kont). Dodawanie i zarządzanie listą pracowników przeniesione z zakładki „Godziny pracy” do osobnej sekcji „Lista pracowników” w Panelu głównym — nie zaśmieca już widoku wpisywania godzin.' },
   { date:'2026-09-04', category:'bezpieczenstwo', title:'Naprawa logowania na serwerze bez SSL',
     description:'Dodano zapasowy sposób hashowania haseł na wypadek, gdy przeglądarka blokuje wbudowaną funkcję kryptograficzną — co dzieje się na zwykłym HTTP, bez certyfikatu SSL. Logowanie i zakładanie kont działa teraz niezależnie od tego.' },
 

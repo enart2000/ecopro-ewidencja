@@ -235,6 +235,30 @@ async function logout(){
 }
 
 
+/* ---------------- generowanie kodu dla nowego pracownika (dostępne dla managera) ---------------- */
+
+function openGenerateEmployeeCodeModal(){
+  showModal(renderGenerateEmployeeCodeBody());
+}
+function renderGenerateEmployeeCodeBody(generatedCode){
+  return `
+    <h2>Kod dostępu dla nowego pracownika</h2>
+    <p class="hint" style="margin-bottom:14px;">Ten kod pozwala założyć konto wyłącznie z rangą Pracownik (read-only, bez wpisywania godzin).</p>
+    ${generatedCode ? `
+      <div class="codebox" style="font-size:20px; margin-bottom:10px;">${generatedCode}</div>
+      <p class="small-note" style="margin-bottom:14px;">Przekaż ten kod nowej osobie — jest jednorazowy.</p>
+    ` : ''}
+    <button class="btn btn-primary btn-block" onclick="generateEmployeeCodeAndShow()">${generatedCode ? 'Wygeneruj kolejny' : 'Wygeneruj kod'}</button>
+  `;
+}
+async function generateEmployeeCodeAndShow(){
+  const code = genCode(6);
+  S.codes.push({code, role:'employee', used:false, createdAt:Date.now(), createdBy: S.session ? S.session.id : null});
+  await saveCodes();
+  await logEvent('Wygenerowano kod dostępu', 'rola: Pracownik (przez managera)');
+  showModal(renderGenerateEmployeeCodeBody(code));
+}
+
 function openTransferModal(){
   const candidates = S.users.filter(u=>u.id!==S.session.id && u.role!=='superadmin');
   showModal(`
