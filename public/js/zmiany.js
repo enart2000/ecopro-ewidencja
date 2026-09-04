@@ -23,6 +23,8 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-04', category:'poprawka', title:'Podsumowanie miesięczne otwierało zły miesiąc',
+    description:'Przycisk „Podsumowanie miesięczne” na Panelu głównym domyślnie pokazywał poprzedni miesiąc zamiast bieżącego, przez co wyglądało, jakby przepracowane godziny się nie liczyły. Samo liczenie działało cały czas poprawnie i na bieżąco — teraz przycisk od razu otwiera aktualny miesiąc.' },
   { date:'2026-09-04', category:'wyglad', title:'Ikona strony (favicon) w karcie przeglądarki',
     description:'Dodano ikonę widoczną w karcie przeglądarki (prosty, kontrastowy zegar w kolorze marki) zamiast domyślnej, pustej ikony pliku.' },
   { date:'2026-09-04', category:'funkcja', title:'Kody dla pracowników i osobny widok listy pracowników',

@@ -106,7 +106,7 @@ function renderDashboard(){
     <div class="row-actions" style="margin-top:22px;">
       ${isAdminLike(u) ? `<button class="btn" onclick="goView('userpanel')">👤 Panel użytkowników</button>` : ''}
       ${(isAdminLike(u) || u.isManager) ? `<button class="btn" onclick="goView('employees')">👥 Lista pracowników</button>` : ''}
-      <button class="btn" onclick="openSummary('${prevMonth(monthStr(new Date()))}')">📊 Podsumowanie miesięczne</button>
+      <button class="btn" onclick="openSummary('${monthStr(new Date())}')">📊 Podsumowanie miesięczne</button>
       ${isAdminLike(u) ? `<button class="btn" onclick="goView('log')">📜 Dziennik zdarzeń</button>` : ''}
       ${isAdminLike(u) ? `<button class="btn" onclick="goView('changelog')">🗂️ Historia zmian</button>` : ''}
       ${u.isManager ? `<button class="btn" onclick="openGenerateEmployeeCodeModal()">🎫 Kod dla nowego pracownika</button>` : ''}
