@@ -31,6 +31,18 @@ const CHANGELOG = [
   { date:'2026-09-03', category:'infrastruktura', title:'Wdrożenie na serwer produkcyjny i GitHub',
     description:'Konfiguracja usługi systemd (automatyczny start po restarcie serwera), repozytorium GitHub do wygodnych aktualizacji kodu oraz automatyczny, codzienny backup danych z rotacją starych kopii.' },
 
+  { date:'2026-09-03', category:'poprawka', title:'Poprawka podwójnego przycisku zamykania okien',
+    description:'Okna „Dodaj wyjście” i „Eksport / kopiowanie” pokazywały dwa przyciski zamknięcia zamiast jednego.' },
+
+  { date:'2026-09-03', category:'poprawka', title:'Synchronizacja szybkiego wpisywania przyjścia',
+    description:'Uzupełnienie brakującej godziny przyjścia w okienku przypominającym nie zawsze od razu pojawiało się w tabeli „Godziny pracy” — trzeba było wpisywać ponownie. Naprawione.' },
+
+  { date:'2026-09-03', category:'bezpieczenstwo', title:'Ochrona przed samo-degradacją administratora',
+    description:'Zablokowano możliwość przypadkowej zmiany własnej rangi lub usunięcia własnego konta z panelu użytkowników.' },
+
+  { date:'2026-09-03', category:'funkcja', title:'Kreator dodawania wyjść służbowych',
+    description:'Dodawanie wyjścia prowadzi teraz krok po kroku: wybór kategorii (prywatne / służbowe), godziny, a komentarz jest opcjonalny i domyślnie ukryty.' },
+
   { date:'2026-09-03', category:'poprawka', title:'Drobne poprawki wygody użytkowania',
     description:'Zniknięcie plakietki „Pracownik” w górnym pasku, jednorazowe (a nie powtarzające się) powiadomienie o podsumowaniu miesiąca, ukrywanie pracowników bez wyjść służbowych zamiast pustych wpisów, lista podsumowania miesięcznego pokazuje tylko miesiące z realnymi danymi.' },
 
