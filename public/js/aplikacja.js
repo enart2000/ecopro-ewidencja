@@ -626,6 +626,7 @@ async function loadAvailableMonths(){
 }
 
 function renderSummaryView(ym){
+  const u = S.session;
   if(!summaryCache[ym]){
     getMonthData(ym).then(data=>{ summaryCache[ym]=data; rerenderMain(); });
     return `<div class="backlink" onclick="goView('dashboard')">← Panel główny</div><div class="empty">Wczytywanie podsumowania…</div>`;
@@ -657,7 +658,7 @@ function renderSummaryView(ym){
         <select onchange="changeSummaryMonth(this.value)" style="padding:8px; border-radius:8px; border:1px solid var(--line-strong); background:var(--panel-2); color:var(--ink);">
           ${monthOptions.map(m=>`<option value="${m}" ${m===ym?'selected':''}>${humanMonth(m)}</option>`).join('')}
         </select>
-        <button class="btn btn-sm" onclick="exportMonthExcel('${ym}')">⬇ Eksport do Excela</button>
+        ${canEnterHours(u) ? `<button class="btn btn-sm" onclick="exportMonthExcel('${ym}')">⬇ Eksport do Excela</button>` : ''}
       </div>
     </div>
     <div class="summary-grid">${cards || '<div class="empty">Brak pracowników.</div>'}</div>
@@ -856,6 +857,7 @@ async function buildExportRows(empId, fromDate, toDate){
 }
 
 async function doExportCopy(){
+  if(!(isAdminLike(S.session) || S.session.isManager)){ toast('Eksport jest dostępny tylko dla managera i administratorów.'); return; }
   const ids = Object.keys(exportState.selected).filter(id=>exportState.selected[id]);
   if(ids.length===0){ toast('Zaznacz co najmniej jednego pracownika.'); return; }
   const empId = ids[0];
@@ -873,6 +875,7 @@ async function doExportCopy(){
 }
 
 async function doExportExcel(){
+  if(!(isAdminLike(S.session) || S.session.isManager)){ toast('Eksport jest dostępny tylko dla managera i administratorów.'); return; }
   const ids = Object.keys(exportState.selected).filter(id=>exportState.selected[id]);
   if(ids.length===0){ toast('Zaznacz co najmniej jednego pracownika.'); return; }
   const header = ['Dzień','Data','Godziny pracy','Godzina wejścia','Godzina wyjścia','wyjście prywatne od','wyjście prywatne do','Suma wyjść prywatnych','Ilość godzin z wyjściami pryw'];
@@ -895,6 +898,7 @@ async function doExportExcel(){
    ============================================================ */
 
 async function exportMonthExcel(ym){
+  if(!canEnterHours(S.session)){ toast('Eksport jest dostępny tylko dla managera i administratorów.'); return; }
   const data = await getMonthData(ym);
   const dates = Object.keys(data).sort();
   const rows = [];

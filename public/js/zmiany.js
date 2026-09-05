@@ -23,6 +23,8 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-04', category:'bezpieczenstwo', title:'Zablokowano eksport danych dla zwykłego pracownika',
+    description:'Zwykły pracownik (read-only) mógł pobrać eksport Excela z Podsumowania miesięcznego, mimo że nie powinien mieć żadnego dostępu do eksportu danych. Przycisk zniknął z jego widoku, a dodatkowo sama funkcja eksportu odmawia teraz działania komukolwiek poza managerem i administratorami — nawet gdyby ktoś spróbował to obejść z pominięciem interfejsu.' },
   { date:'2026-09-04', category:'poprawka', title:'Podsumowanie miesięczne otwierało zły miesiąc',
     description:'Przycisk „Podsumowanie miesięczne” na Panelu głównym domyślnie pokazywał poprzedni miesiąc zamiast bieżącego, przez co wyglądało, jakby przepracowane godziny się nie liczyły. Samo liczenie działało cały czas poprawnie i na bieżąco — teraz przycisk od razu otwiera aktualny miesiąc.' },
   { date:'2026-09-04', category:'wyglad', title:'Ikona strony (favicon) w karcie przeglądarki',
