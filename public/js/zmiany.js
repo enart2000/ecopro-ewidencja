@@ -23,6 +23,8 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-08', category:'wyglad', title:'Uproszczono kolumnę „Kto” w dzienniku zdarzeń',
+    description:'Usunięto plakietkę rangi przy nazwisku w dzienniku zdarzeń — zostaje samo imię osoby dokonującej zmiany.' },
   { date:'2026-09-08', category:'funkcja', title:'Domyślne przyjście dla pracownika',
     description:'Obok domyślnego wyjścia można teraz ustawić też domyślną godzinę przyjścia w Liście pracowników — działa tak samo, przyciskiem „Użyj domyślnej” przy wpisywaniu godzin.' },
   { date:'2026-09-04', category:'wyglad', title:'Wersja mobilna (bez zmian na komputerze)',

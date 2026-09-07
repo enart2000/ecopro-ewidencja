@@ -130,7 +130,7 @@ function renderLogView(){
     const dateStr = d.toLocaleString('pl-PL', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
     return `<tr>
       <td class="mono" style="white-space:nowrap; color:var(--ink-dim); font-size:12px;">${dateStr}</td>
-      <td style="white-space:nowrap;">${escapeHtml(e.userName)}${e.role ? roleBadge(e.role) : ''}</td>
+      <td style="white-space:nowrap;">${escapeHtml(e.userName)}</td>
       <td style="white-space:nowrap; font-weight:600;">${escapeHtml(e.action)}</td>
       <td style="color:var(--ink-dim); font-size:13px;">${escapeHtml(e.details||'')}</td>
     </tr>`;
