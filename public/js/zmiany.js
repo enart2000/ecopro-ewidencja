@@ -23,6 +23,8 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-04', category:'wyglad', title:'Wersja mobilna (bez zmian na komputerze)',
+    description:'Wpisywanie godzin, wyjścia służbowe, panel użytkowników i górny pasek dostosowują się teraz do wąskich ekranów telefonów — karty i pola układają się jedna pod drugą zamiast ciasnego rzędu. Reguły uruchamiają się wyłącznie poniżej 640px szerokości ekranu, więc wygląd na komputerze pozostaje dokładnie taki sam jak wcześniej.' },
   { date:'2026-09-04', category:'bezpieczenstwo', title:'Zablokowano eksport danych dla zwykłego pracownika',
     description:'Zwykły pracownik (read-only) mógł pobrać eksport Excela z Podsumowania miesięcznego, mimo że nie powinien mieć żadnego dostępu do eksportu danych. Przycisk zniknął z jego widoku, a dodatkowo sama funkcja eksportu odmawia teraz działania komukolwiek poza managerem i administratorami — nawet gdyby ktoś spróbował to obejść z pominięciem interfejsu.' },
   { date:'2026-09-04', category:'poprawka', title:'Podsumowanie miesięczne otwierało zły miesiąc',

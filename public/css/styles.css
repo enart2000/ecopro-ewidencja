@@ -233,3 +233,41 @@ a{color:inherit;}
 }
 .empty{color:var(--ink-dim); font-size:13.5px; text-align:center; padding:26px 10px;}
 .hint{font-size:12px; color:var(--ink-dim); margin-top:6px;}
+
+/* ============================================================
+   WERSJA MOBILNA — reguły aktywne WYŁĄCZNIE poniżej 640px.
+   Na komputerze (szerszy ekran) nic tutaj się nie stosuje —
+   wygląd desktopowy pozostaje całkowicie bez zmian.
+   ============================================================ */
+@media(max-width:640px){
+  .main{ padding:16px; }
+
+  /* Górny pasek: zawijanie zamiast ściskania w jeden rząd,
+     ukrycie mniej istotnego tekstu (podtytuł, godzina zapisu) */
+  .topbar{ flex-wrap:wrap; gap:10px; padding:12px 16px; }
+  .brand-sub{ display:none; }
+  .savebar .savetxt{ display:none; }
+  .top-right{ gap:8px; }
+  .hello{ font-size:12px; }
+  .hello b{ display:block; }
+  .icon-btn{ width:34px; height:34px; }
+  .rolebadge{ font-size:9px; padding:2px 6px; }
+
+  /* Karty "ticket" (wpisywanie godzin, wyjścia, lista pracowników):
+     z rzędu obok siebie -> pełnoszerokie sekcje jedna pod drugą */
+  .ticket{ flex-direction:column; align-items:stretch; }
+  .ticket-name{ min-width:0; width:100%; }
+  .perf{ display:none; }
+  .ticket-field{ min-width:0; width:100%; border-top:1px solid var(--line); }
+  .ticket-field:first-of-type{ border-top:none; }
+  .ticket-badge{ padding:12px 16px; justify-content:flex-start; }
+
+  /* Wyjścia służbowe: pola w wierszu -> zawijanie zamiast przewijania w bok */
+  .trip-item{ flex-wrap:wrap; }
+
+  /* Nagłówki sekcji: przyciski/select pod tytułem zamiast obok */
+  .panel-head{ flex-direction:column; align-items:flex-start; gap:10px; }
+  .panel-head .row-actions{ width:100%; }
+  .row-actions{ width:100%; }
+  .row-actions .btn{ flex:1; justify-content:center; }
+}

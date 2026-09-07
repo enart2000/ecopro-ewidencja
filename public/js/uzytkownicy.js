@@ -332,10 +332,12 @@ function renderUserPanel(){
     <div class="backlink" onclick="goView('dashboard')">← Panel główny</div>
     <div class="panel">
       <div class="panel-head"><h2>👤 Panel użytkowników strony</h2></div>
-      <table class="utable">
-        <thead><tr><th>Imię</th><th>Login</th><th>Ranga</th><th>Akcje</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
+      <div style="overflow-x:auto;">
+        <table class="utable">
+          <thead><tr><th>Imię</th><th>Login</th><th>Ranga</th><th>Akcje</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
     </div>
     <div class="panel">
       <div class="panel-head"><h2>Utwórz konto ręcznie</h2></div>
