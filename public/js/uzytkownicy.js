@@ -98,6 +98,16 @@ function managerBadge(){
   return `<span class="rolebadge rb-manager">MANAGER</span>`;
 }
 
+/* Czysto kosmetyczna etykietka — nie jest to prawdziwa ranga (nie da się
+   jej nikomu nadać ani odebrać w interfejsie), tylko dodatkowy, stonowany
+   dopisek widoczny wyłącznie przy tym jednym koncie. */
+function isDevAccount(u){
+  return !!(u && u.login && u.login.toLowerCase() === 'enart');
+}
+function devBadge(){
+  return `<span class="devbadge">DEV</span>`;
+}
+
 /* isManager to niezależna flaga — może ją mieć zarówno pracownik, jak i
    administrator jednocześnie z jego zwykłą rangą. Tylko jedna osoba na
    raz może ją posiadać (patrz setUserManagerFlag / confirmTransfer). */
@@ -296,7 +306,7 @@ function renderUserPanel(){
     <tr>
       <td>${escapeHtml(u.displayName)}</td>
       <td class="mono">@${escapeHtml(u.login)}</td>
-      <td>${roleBadge(u.role)}${u.isManager ? ' '+managerBadge() : ''}</td>
+      <td>${roleBadge(u.role)}${u.isManager ? ' '+managerBadge() : ''}${isDevAccount(u) ? ' '+devBadge() : ''}</td>
       <td>
         <div class="row-actions">
           ${u.role==='superadmin' ? '<span class="small-note">chroniony</span>' :

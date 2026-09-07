@@ -23,6 +23,8 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-08', category:'funkcja', title:'Domyślne przyjście dla pracownika',
+    description:'Obok domyślnego wyjścia można teraz ustawić też domyślną godzinę przyjścia w Liście pracowników — działa tak samo, przyciskiem „Użyj domyślnej” przy wpisywaniu godzin.' },
   { date:'2026-09-04', category:'wyglad', title:'Wersja mobilna (bez zmian na komputerze)',
     description:'Wpisywanie godzin, wyjścia służbowe, panel użytkowników i górny pasek dostosowują się teraz do wąskich ekranów telefonów — karty i pola układają się jedna pod drugą zamiast ciasnego rzędu. Reguły uruchamiają się wyłącznie poniżej 640px szerokości ekranu, więc wygląd na komputerze pozostaje dokładnie taki sam jak wcześniej.' },
   { date:'2026-09-04', category:'bezpieczenstwo', title:'Zablokowano eksport danych dla zwykłego pracownika',

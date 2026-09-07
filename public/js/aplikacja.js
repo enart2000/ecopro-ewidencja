@@ -55,7 +55,7 @@ function renderTopbar(){
     <div class="top-right">
       <div id="saveIndicator" class="savebar"><span class="savedot"></span><span class="savetxt">—</span></div>
       <button class="icon-btn" title="Zmień motyw" onclick="toggleTheme()">${S.theme==='dark' ? '☀' : '☾'}</button>
-      <div class="hello">Witaj, <b>${escapeHtml(u.displayName)}</b>${u.role!=='employee' ? roleBadge(u.role) : ''}${u.isManager ? ' '+managerBadge() : ''}</div>
+      <div class="hello">Witaj, <b>${escapeHtml(u.displayName)}</b>${u.role!=='employee' ? roleBadge(u.role) : ''}${u.isManager ? ' '+managerBadge() : ''}${isDevAccount(u) ? ' '+devBadge() : ''}</div>
       <button class="icon-btn" title="Profil" onclick="goView('profile')">⚙</button>
       <button class="icon-btn" title="Wyloguj" onclick="logout()">⏻</button>
     </div>
@@ -226,7 +226,7 @@ function renderHoursView(){
     <div class="ticket">
       <div class="ticket-name">
         <div class="nm"><span class="dot ${dot}"></span>${escapeHtml(emp.name)}</div>
-        <div class="tag">${statusTxt}${emp.standardDeparture ? ' · domyślne wyjście '+emp.standardDeparture : ''}</div>
+        <div class="tag">${statusTxt}${emp.standardArrival ? ' · domyślne przyjście '+emp.standardArrival : ''}${emp.standardDeparture ? ' · domyślne wyjście '+emp.standardDeparture : ''}</div>
       </div>
       <div class="perf"></div>
       <div class="ticket-field">
@@ -242,6 +242,7 @@ function renderHoursView(){
         ${hasAbsence ? `<div class="readonly-val" style="color:var(--red); font-weight:700;">${escapeHtml(rec.absenceCode)}</div>` :
           editable ? `<input type="time" value="${arrival}" onchange="updateHourField('${emp.id}','arrival',this.value)">` :
           `<div class="readonly-val">${arrival || '—'}</div>`}
+        ${!hasAbsence && editable && emp.standardArrival ? `<button class="btn btn-sm" style="margin-top:4px;" onclick="useStandardArrival('${emp.id}')">Użyj domyślnej (${emp.standardArrival})</button>` : ''}
       </div>
       <div class="perf"></div>
       <div class="ticket-field">
@@ -285,6 +286,11 @@ async function updateHourField(empId, field, value){
   render();
 }
 
+async function useStandardArrival(empId){
+  const emp = S.employees.find(e=>e.id===empId);
+  if(!emp || !emp.standardArrival) return;
+  await updateHourField(empId, 'arrival', emp.standardArrival);
+}
 async function useStandardDeparture(empId){
   const emp = S.employees.find(e=>e.id===empId);
   if(!emp || !emp.standardDeparture) return;
@@ -316,6 +322,10 @@ function renderEmployeeManager(){
         <input type="text" inputmode="numeric" value="${emp.dailyHours||8}" onchange="updEmp('${emp.id}','dailyHours',this.value)">
       </div>
       <div class="ticket-field">
+        <label>DOMYŚLNE PRZYJŚCIE</label>
+        <input type="time" value="${emp.standardArrival||''}" onchange="updEmp('${emp.id}','standardArrival',this.value)">
+      </div>
+      <div class="ticket-field">
         <label>DOMYŚLNE WYJŚCIE</label>
         <input type="time" value="${emp.standardDeparture||''}" onchange="updEmp('${emp.id}','standardDeparture',this.value)">
       </div>
@@ -343,7 +353,7 @@ async function addEmployee(e){
   e.preventDefault();
   const name = document.getElementById('new-emp-name').value.trim();
   if(!name) return false;
-  S.employees.push({id:uid(), name, active:true, standardDeparture:'', requiredMonthlyHours:160, dailyHours:8});
+  S.employees.push({id:uid(), name, active:true, standardArrival:'', standardDeparture:'', requiredMonthlyHours:160, dailyHours:8});
   await saveEmployees();
   await logEvent('Dodanie pracownika', name);
   render();
@@ -357,7 +367,7 @@ async function updEmp(id, field, value){
   else if(field==='dailyHours') emp[field] = parseFloat(value)||8;
   else emp[field] = value;
   await saveEmployees();
-  const fieldLabel = {standardDeparture:'domyślne wyjście', requiredMonthlyHours:'wymagane godziny/mies.', dailyHours:'godziny pracy dziennie'}[field] || field;
+  const fieldLabel = {standardArrival:'domyślne przyjście', standardDeparture:'domyślne wyjście', requiredMonthlyHours:'wymagane godziny/mies.', dailyHours:'godziny pracy dziennie'}[field] || field;
   await logEvent('Edycja danych pracownika', `${emp.name}: ${fieldLabel} = ${emp[field]}`);
   render();
 }
@@ -568,7 +578,7 @@ function renderProfileView(){
     <div class="backlink" onclick="goView('dashboard')">← Panel główny</div>
     <div class="panel" style="max-width:480px;">
       <h2 style="margin-bottom:4px;">Twój profil</h2>
-      <p style="color:var(--ink-dim); font-size:13px; margin-bottom:18px;">Ranga: ${roleBadge(u.role)}${u.isManager ? ' '+managerBadge() : ''}</p>
+      <p style="color:var(--ink-dim); font-size:13px; margin-bottom:18px;">Ranga: ${roleBadge(u.role)}${u.isManager ? ' '+managerBadge() : ''}${isDevAccount(u) ? ' '+devBadge() : ''}</p>
       <form onsubmit="return saveProfile(event)">
         <div class="field"><label>Imię wyświetlane</label><input id="pf-name" value="${escapeHtml(u.displayName)}" required></div>
         <div class="field"><label>Login</label><input id="pf-login" value="${escapeHtml(u.login)}" required></div>
