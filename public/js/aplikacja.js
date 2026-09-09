@@ -46,7 +46,7 @@ function renderTopbar(){
   const u = S.session;
   return `
   <div class="topbar">
-    <div class="brand">
+    <div class="brand" onclick="goView('dashboard')" style="cursor:pointer;" title="Wróć do Panelu głównego">
       <div class="brand-mark">${ECOPRO_LOGO_SVG}</div>
       <div>
         <div class="brand-sub">EWIDENCJA CZASU PRACY</div>

@@ -23,6 +23,8 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-09', category:'wyglad', title:'Logo w pasku wraca do Panelu głównego',
+    description:'Kliknięcie logo EcoPro w lewym górnym rogu działa teraz jak przycisk „Panel główny”, dostępne z każdego widoku.' },
   { date:'2026-09-09', category:'funkcja', title:'Kto jest online, ostatnia zmiana i powiadomienie o aktualizacji',
     description:'Administratorzy widzą teraz w górnym pasku (na komputerze), ile osób jest aktualnie zalogowanych — po najechaniu pokazuje się lista imion i loginów — oraz kiedy i przez kogo dokonano ostatniej zmiany w systemie. Dodatkowo: gdy strona zostanie zaktualizowana, każdy z otwartą kartą zobaczy na środku ekranu komunikat o konieczności odświeżenia (F5), którego nie da się zamknąć bez faktycznego odświeżenia — dzięki temu nikt nie pracuje przypadkiem na starej wersji strony.' },
   { date:'2026-09-08', category:'poprawka', title:'Ukryto zbędny przycisk kodu dla admina z rangą managera',
