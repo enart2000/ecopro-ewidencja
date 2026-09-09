@@ -23,6 +23,8 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-09', category:'poprawka', title:'Okienko brakujących przyjść pomijało status dnia',
+    description:'Osoby ze statusem L4, urlop itd. były błędnie pokazywane w codziennym okienku „Uzupełnij przyjścia”, mimo że nie powinny mieć wpisanej godziny tego dnia. Teraz są pomijane, jeśli mają ustawiony jakikolwiek status nieobecności.' },
   { date:'2026-09-09', category:'funkcja', title:'Odświeżenie strony nie wylogowuje',
     description:'Naciśnięcie F5/odświeżenie strony w tej samej karcie przeglądarki zachowuje teraz zalogowaną sesję — nie trzeba logować się ponownie. Zamknięcie karty (albo ręczne wylogowanie) nadal wymaga ponownego zalogowania.' },
   { date:'2026-09-09', category:'wyglad', title:'Logo w pasku wraca do Panelu głównego',

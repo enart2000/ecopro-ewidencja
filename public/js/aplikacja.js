@@ -724,7 +724,7 @@ function maybeAutoPopups(){
 async function checkMissingArrivals(){
   const today = todayStr();
   const day = await getDayRecord(today);
-  const missing = S.employees.filter(e=>e.active!==false && !(day[e.id] && day[e.id].arrival));
+  const missing = S.employees.filter(e=>e.active!==false && !(day[e.id] && (day[e.id].arrival || day[e.id].absenceCode)));
   if(missing.length===0) return;
   showModal(`
     <h2>Uzupełnij dzisiejsze przyjścia</h2>
