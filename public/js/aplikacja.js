@@ -1069,6 +1069,14 @@ function showUpdateBanner(){
   await loadGodzinyData();
   await loadUzytkownicyData();
   await loadDziennikData();
+  // przywrócenie sesji po odświeżeniu strony (F5) w tej samej karcie —
+  // zamknięcie karty samo czyści ten wpis, więc wtedy trzeba zalogować się ponownie
+  const storedId = loadSessionId();
+  if(storedId){
+    const found = S.users.find(u=>u.id===storedId);
+    if(found){ S.session = found; S.view = 'dashboard'; }
+    else { clearSessionId(); }
+  }
   S.ready = true;
   render();
   S.appVersion = await fetchAppVersion();

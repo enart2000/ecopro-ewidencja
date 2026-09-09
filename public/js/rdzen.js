@@ -125,6 +125,22 @@ function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':
    Dzięki temu ten sam plik działa w obu miejscach bez zmian. */
 const HAS_ARTIFACT_STORAGE = (typeof window !== 'undefined' && window.storage && typeof window.storage.get === 'function');
 
+/* ---------------- utrzymanie sesji w obrębie karty przeglądarki ----------------
+   sessionStorage: przetrwa odświeżenie strony (F5), ale znika po zamknięciu
+   karty/okna — dokładnie taki efekt, jaki ma być. Owinięte w try/catch, bo
+   w podglądzie artefaktu Claude ta funkcja przeglądarki jest niedostępna —
+   wtedy po prostu nic się nie dzieje i logowanie działa jak dotychczas. */
+function saveSessionId(id){
+  try{ if(typeof sessionStorage !== 'undefined') sessionStorage.setItem('ecopro_session_id', id); }catch(e){}
+}
+function loadSessionId(){
+  try{ if(typeof sessionStorage !== 'undefined') return sessionStorage.getItem('ecopro_session_id'); }catch(e){}
+  return null;
+}
+function clearSessionId(){
+  try{ if(typeof sessionStorage !== 'undefined') sessionStorage.removeItem('ecopro_session_id'); }catch(e){}
+}
+
 async function stGet(key, fallback){
   try{
     if(HAS_ARTIFACT_STORAGE){

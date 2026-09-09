@@ -191,6 +191,7 @@ async function doLogin(e){
     if(h !== user.passHash){ loginError='Nieprawidłowy login lub hasło.'; render(); return false; }
     loginError='';
     S.session = user;
+    saveSessionId(user.id);
     S.autoPopupShown=false; S.summaryPopupShown=false;
     S.view='dashboard';
     render();
@@ -229,6 +230,7 @@ async function doRegisterWithCode(e){
     await saveUsers(); await saveCodes();
     loginError='';
     S.session = newUser;
+    saveSessionId(newUser.id);
     S.view='dashboard';
     await logEvent('Rejestracja przez kod', `Utworzono konto (rola: ${roleLabel(newUser.role)}) przy użyciu kodu ${code}.`);
     toast('Konto utworzone. Witaj, '+name+'!');
@@ -243,6 +245,7 @@ async function doRegisterWithCode(e){
 }
 
 async function logout(){
+  clearSessionId();
   S.session=null; loginMode='login'; loginError=''; render();
 }
 
