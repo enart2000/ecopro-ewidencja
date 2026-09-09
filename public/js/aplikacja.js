@@ -999,8 +999,37 @@ function formatTimeHM(ts){
   return new Date(ts).toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'});
 }
 
+/* Sprawdza, czy konto sesji nadal istnieje na serwerze (nie zostało
+   usunięte przez administratora w międzyczasie) i przy okazji odświeża
+   dane sesji (np. zmianę rangi). Wywoływane cyklicznie razem z heartbeat. */
+async function validateSessionStillValid(){
+  if(!S.session) return false;
+  try{
+    const freshUsers = await stGet('app:users', []);
+    const found = freshUsers.find(u=>u.id===S.session.id);
+    if(!found){
+      forceLogoutWithMessage('Twoje konto zostało usunięte przez administratora.');
+      return false;
+    }
+    S.session = found;
+    S.users = freshUsers;
+    return true;
+  }catch(e){
+    return true; // przy chwilowym problemie sieci nie wylogowuj na siłę
+  }
+}
+function forceLogoutWithMessage(msg){
+  clearSessionId();
+  S.session = null;
+  loginMode = 'login';
+  loginError = msg;
+  render();
+}
+
 async function sendHeartbeatAndFetchStatus(){
   if(!S.session) return;
+  const stillValid = await validateSessionStillValid();
+  if(!stillValid) return; // sesja właśnie zakończona (konto usunięte) - reszta zbędna
   try{
     const presence = await stGet('app:presence', {});
     presence[S.session.id] = { name: S.session.displayName, login: S.session.login, lastPing: Date.now() };

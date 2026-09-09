@@ -23,6 +23,8 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-09', category:'bezpieczenstwo', title:'Usunięcie konta wylogowuje od razu (nie dopiero po odświeżeniu)',
+    description:'Wcześniej usunięte konto mogło dalej edytować dane, dopóki samo się nie wylogowało lub nie odświeżyło strony. Teraz aplikacja co ok. 20 sekund sprawdza w tle, czy konto sesji nadal istnieje — jeśli administrator je usunie, użytkownik zostaje automatycznie wylogowany z odpowiednim komunikatem.' },
   { date:'2026-09-09', category:'poprawka', title:'Okienko brakujących przyjść pomijało status dnia',
     description:'Osoby ze statusem L4, urlop itd. były błędnie pokazywane w codziennym okienku „Uzupełnij przyjścia”, mimo że nie powinny mieć wpisanej godziny tego dnia. Teraz są pomijane, jeśli mają ustawiony jakikolwiek status nieobecności.' },
   { date:'2026-09-09', category:'funkcja', title:'Odświeżenie strony nie wylogowuje',
