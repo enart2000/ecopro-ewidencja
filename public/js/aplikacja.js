@@ -54,10 +54,11 @@ function renderTopbar(){
     </div>
     <div class="top-right">
       <div id="saveIndicator" class="savebar"><span class="savedot"></span><span class="savetxt">—</span></div>
+      ${isAdminLike(u) ? `<div id="statusBarInfo" class="statusbar-info hide-mobile"></div>` : ''}
       <button class="icon-btn" title="Zmień motyw" onclick="toggleTheme()">${S.theme==='dark' ? '☀' : '☾'}</button>
       <div class="hello">Witaj, <b>${escapeHtml(u.displayName)}</b>${u.role!=='employee' ? roleBadge(u.role) : ''}${u.isManager ? ' '+managerBadge() : ''}${isDevAccount(u) ? ' '+devBadge() : ''}</div>
       <button class="icon-btn" title="Profil" onclick="goView('profile')">⚙</button>
-      <button class="icon-btn" title="Wyloguj" onclick="logout()">⏻</button>
+      <button class="icon-btn" title="Wyloguj" onclick="logout()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></button>
     </div>
   </div>`;
 }
@@ -88,6 +89,23 @@ function renderView(){
 
 function renderDashboard(){
   const u = S.session;
+  const navItems = [
+    { show: isAdminLike(u), onclick: "goView('userpanel')", icon:'👤', label:'Panel użytkowników' },
+    { show: isAdminLike(u) || u.isManager, onclick: "goView('employees')", icon:'👥', label:'Lista pracowników' },
+    { show: true, onclick: `openSummary('${monthStr(new Date())}')`, icon:'📊', label:'Podsumowanie miesięczne' },
+    { show: isAdminLike(u), onclick: "goView('log')", icon:'📜', label:'Dziennik zdarzeń' },
+    { show: isAdminLike(u), onclick: "goView('changelog')", icon:'🗂️', label:'Historia zmian' },
+    { show: u.isManager && !isAdminLike(u), onclick: "openGenerateEmployeeCodeModal()", icon:'🎫', label:'Kod dla nowego pracownika' },
+    { show: u.isManager, onclick: "openTransferModal()", icon:'⇄', label:'Przekaż rangę managera', teal:true },
+  ].filter(i=>i.show);
+
+  const desktopButtons = navItems.map(i=>
+    `<button class="btn${i.teal ? ' btn-teal' : ''}" onclick="${i.onclick}">${i.icon} ${i.label}</button>`
+  ).join('');
+  const mobileItems = navItems.map(i=>
+    `<div class="mobile-menu-item" onclick="${i.onclick}">${i.icon} ${i.label}</div>`
+  ).join('');
+
   return `
     <h1 style="font-size:26px; margin-bottom:6px;">Panel główny</h1>
     <p style="color:var(--ink-dim); font-size:14px; margin-bottom:22px;">${humanDate(todayStr())}</p>
@@ -103,15 +121,11 @@ function renderDashboard(){
         <p>Rejestr wyjść w czasie pracy wraz z notatkami.</p>
       </div>
     </div>
-    <div class="row-actions" style="margin-top:22px;">
-      ${isAdminLike(u) ? `<button class="btn" onclick="goView('userpanel')">👤 Panel użytkowników</button>` : ''}
-      ${(isAdminLike(u) || u.isManager) ? `<button class="btn" onclick="goView('employees')">👥 Lista pracowników</button>` : ''}
-      <button class="btn" onclick="openSummary('${monthStr(new Date())}')">📊 Podsumowanie miesięczne</button>
-      ${isAdminLike(u) ? `<button class="btn" onclick="goView('log')">📜 Dziennik zdarzeń</button>` : ''}
-      ${isAdminLike(u) ? `<button class="btn" onclick="goView('changelog')">🗂️ Historia zmian</button>` : ''}
-      ${u.isManager ? `<button class="btn" onclick="openGenerateEmployeeCodeModal()">🎫 Kod dla nowego pracownika</button>` : ''}
-      ${u.isManager ? `<button class="btn btn-teal" onclick="openTransferModal()">⇄ Przekaż rangę managera</button>` : ''}
-    </div>
+    <div class="row-actions dash-links" style="margin-top:22px;">${desktopButtons}</div>
+    <details class="mobile-menu">
+      <summary>☰ Więcej opcji</summary>
+      <div class="mobile-menu-list">${mobileItems}</div>
+    </details>
   `;
 }
 
@@ -129,10 +143,10 @@ function renderLogView(){
     const d = new Date(e.ts);
     const dateStr = d.toLocaleString('pl-PL', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
     return `<tr>
-      <td class="mono" style="white-space:nowrap; color:var(--ink-dim); font-size:12px;">${dateStr}</td>
-      <td style="white-space:nowrap;">${escapeHtml(e.userName)}</td>
-      <td style="white-space:nowrap; font-weight:600;">${escapeHtml(e.action)}</td>
-      <td style="color:var(--ink-dim); font-size:13px;">${escapeHtml(e.details||'')}</td>
+      <td class="mono" data-label="Data i godzina" style="white-space:nowrap; color:var(--ink-dim); font-size:12px;">${dateStr}</td>
+      <td data-label="Kto" style="white-space:nowrap;">${escapeHtml(e.userName)}</td>
+      <td data-label="Zdarzenie" style="white-space:nowrap; font-weight:600;">${escapeHtml(e.action)}</td>
+      <td data-label="Szczegóły" style="color:var(--ink-dim); font-size:13px;">${escapeHtml(e.details||'')}</td>
     </tr>`;
   }).join('');
   return `
@@ -237,6 +251,7 @@ function renderHoursView(){
           `<div class="readonly-val" style="font-size:13px;">${hasAbsence ? escapeHtml(absenceLabel(rec.absenceCode)) : 'Obecność'}</div>`}
       </div>
       <div class="perf"></div>
+      <div class="field-pair">
       <div class="ticket-field">
         <label>PRZYJŚCIE</label>
         ${hasAbsence ? `<div class="readonly-val" style="color:var(--red); font-weight:700;">${escapeHtml(rec.absenceCode)}</div>` :
@@ -252,6 +267,7 @@ function renderHoursView(){
           `<div class="readonly-val">${departure || '—'}</div>`}
         ${!hasAbsence && editable && emp.standardDeparture ? `<button class="btn btn-sm" style="margin-top:4px;" onclick="useStandardDeparture('${emp.id}')">Użyj domyślnej (${emp.standardDeparture})</button>` : ''}
       </div>
+      </div>
     </div>`;
   }).join('');
 
@@ -261,7 +277,7 @@ function renderHoursView(){
       <h2>🕘 Godziny pracy</h2>
       <div class="row-actions">
         <input type="date" value="${S.currentDate}" class="mono" style="padding:8px 10px; border-radius:8px; border:1px solid var(--line-strong); background:var(--panel-2); color:var(--ink);" onchange="changeHoursDate(this.value)">
-        ${(isAdminLike(u) || u.isManager) ? `<button class="btn btn-sm" onclick="openExportModal()">📤 Eksport / Kopiowanie</button>` : ''}
+        ${(isAdminLike(u) || u.isManager) ? `<button class="btn btn-sm hide-mobile" onclick="openExportModal()">📤 Eksport / Kopiowanie</button>` : ''}
       </div>
     </div>
     <p style="color:var(--ink-dim); font-size:13.5px; margin-top:-8px; margin-bottom:16px;">${humanDate(S.currentDate)}</p>
@@ -321,6 +337,7 @@ function renderEmployeeManager(){
         <label>GODZ. PRACY DZIENNIE</label>
         <input type="text" inputmode="numeric" value="${emp.dailyHours||8}" onchange="updEmp('${emp.id}','dailyHours',this.value)">
       </div>
+      <div class="field-pair">
       <div class="ticket-field">
         <label>DOMYŚLNE PRZYJŚCIE</label>
         <input type="time" value="${emp.standardArrival||''}" onchange="updEmp('${emp.id}','standardArrival',this.value)">
@@ -328,6 +345,7 @@ function renderEmployeeManager(){
       <div class="ticket-field">
         <label>DOMYŚLNE WYJŚCIE</label>
         <input type="time" value="${emp.standardDeparture||''}" onchange="updEmp('${emp.id}','standardDeparture',this.value)">
+      </div>
       </div>
       <div class="ticket-field">
         <label>WYMAGANE GODZ./MIES.</label>
@@ -971,6 +989,81 @@ function wireViewEvents(){ /* zdarzenia obsłużone przez atrybuty onclick/oncha
    INIT
    ============================================================ */
 
+/* ============================================================
+   OBECNOŚĆ (kto jest online), OSTATNIA ZMIANA, WYKRYWANIE AKTUALIZACJI
+   Działa przez okresowe odpytywanie serwera (bez WebSocketów) — w sam
+   raz na skalę tej aplikacji (kilka-kilkanaście osób).
+   ============================================================ */
+
+function formatTimeHM(ts){
+  return new Date(ts).toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'});
+}
+
+async function sendHeartbeatAndFetchStatus(){
+  if(!S.session) return;
+  try{
+    const presence = await stGet('app:presence', {});
+    presence[S.session.id] = { name: S.session.displayName, login: S.session.login, lastPing: Date.now() };
+    const cutoff = Date.now() - 2*60*1000; // usuń wpisy starsze niż 2 minuty
+    Object.keys(presence).forEach(id=>{ if(presence[id].lastPing < cutoff) delete presence[id]; });
+    await stSet('app:presence', presence);
+    S.onlineUsers = Object.values(presence);
+  }catch(e){ /* ciche niepowodzenie - obecność to funkcja pomocnicza, nie krytyczna */ }
+  try{
+    S.lastChangeInfo = await stGet('app:activity', null);
+  }catch(e){}
+  updateStatusBar();
+}
+
+function updateStatusBar(){
+  const el = document.getElementById('statusBarInfo');
+  if(!el) return;
+  const online = S.onlineUsers || [];
+  const cutoff = Date.now() - 2*60*1000;
+  const activeNow = online.filter(o=>o.lastPing >= cutoff);
+  const namesTitle = activeNow.map(o=>`${o.name} (@${o.login})`).join(', ') || 'brak';
+  const lastChangeTxt = S.lastChangeInfo
+    ? `Ostatnia zmiana: ${formatTimeHM(S.lastChangeInfo.ts)} (${escapeHtml(S.lastChangeInfo.by)})`
+    : 'Ostatnia zmiana: —';
+  el.innerHTML = `
+    <span title="${escapeHtml(namesTitle)}"><span class="online-dot"></span>${activeNow.length} online</span>
+    <span>·</span>
+    <span>${lastChangeTxt}</span>
+  `;
+}
+
+async function fetchAppVersion(){
+  try{
+    const res = await fetch('/version.json?_=' + Date.now());
+    if(!res.ok) return null;
+    const data = await res.json();
+    return data.version || null;
+  }catch(e){ return null; }
+}
+
+async function checkForUpdate(){
+  const v = await fetchAppVersion();
+  if(!v) return;
+  if(!S.appVersion){ S.appVersion = v; return; }
+  if(v !== S.appVersion){ showUpdateBanner(); }
+}
+
+function showUpdateBanner(){
+  if(S.updateBannerShown) return;
+  S.updateBannerShown = true;
+  const bg = document.createElement('div');
+  bg.style.cssText = 'position:fixed; inset:0; background:rgba(8,10,14,0.85); z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px;';
+  bg.innerHTML = `
+    <div style="background:var(--panel); border:1px solid var(--amber); border-radius:16px; padding:30px; max-width:380px; text-align:center; box-shadow:var(--shadow);">
+      <div style="font-size:34px; margin-bottom:10px;">🔄</div>
+      <h2 style="margin-bottom:10px; font-size:19px;">Dostępna jest nowa wersja strony</h2>
+      <p style="color:var(--ink-dim); font-size:13.5px; margin-bottom:20px;">Odśwież stronę, aby zacząć korzystać z najnowszej wersji (F5).</p>
+      <button class="btn btn-primary btn-block" onclick="location.reload()">Odśwież teraz (F5)</button>
+    </div>
+  `;
+  document.body.appendChild(bg);
+}
+
 (async function init(){
   render();
   await loadGodzinyData();
@@ -978,4 +1071,8 @@ function wireViewEvents(){ /* zdarzenia obsłużone przez atrybuty onclick/oncha
   await loadDziennikData();
   S.ready = true;
   render();
+  S.appVersion = await fetchAppVersion();
+  setInterval(checkForUpdate, 30000);
+  setInterval(sendHeartbeatAndFetchStatus, 20000);
+  sendHeartbeatAndFetchStatus();
 })();

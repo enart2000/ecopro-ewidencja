@@ -23,6 +23,12 @@ const CHANGELOG_CATEGORIES = {
 };
 
 const CHANGELOG = [
+  { date:'2026-09-09', category:'funkcja', title:'Kto jest online, ostatnia zmiana i powiadomienie o aktualizacji',
+    description:'Administratorzy widzą teraz w górnym pasku (na komputerze), ile osób jest aktualnie zalogowanych — po najechaniu pokazuje się lista imion i loginów — oraz kiedy i przez kogo dokonano ostatniej zmiany w systemie. Dodatkowo: gdy strona zostanie zaktualizowana, każdy z otwartą kartą zobaczy na środku ekranu komunikat o konieczności odświeżenia (F5), którego nie da się zamknąć bez faktycznego odświeżenia — dzięki temu nikt nie pracuje przypadkiem na starej wersji strony.' },
+  { date:'2026-09-08', category:'poprawka', title:'Ukryto zbędny przycisk kodu dla admina z rangą managera',
+    description:'Administrator, który dodatkowo ma flagę managera, widział na pulpicie przycisk „Kod dla nowego pracownika” — mimo że już ma pełną możliwość generowania kodów w Panelu użytkowników. Przycisk pokazuje się teraz tylko managerowi bez rangi administratora.' },
+  { date:'2026-09-08', category:'wyglad', title:'Duże poprawki wersji mobilnej (bez zmian na komputerze)',
+    description:'Dziennik zdarzeń i panel użytkowników pokazują się jako karty zamiast ciasnej tabeli. Naprawiono niewidoczną ikonę wylogowania. „Witaj + imię” w jednej linii zamiast łamania. Przyjście/wyjście (i domyślne przyjście/wyjście w liście pracowników) obok siebie zamiast jedno pod drugim. Kody dostępu w jednym zwartym wierszu. Eksport/Kopiowanie ukryty na telefonie (dostępny tylko na komputerze). Drugorzędne przyciski na Panelu głównym (Panel użytkowników, Lista pracowników itd.) chowają się pod rozwijane menu „☰ Więcej opcji” zamiast rozjeżdżać się przy większej czcionce systemowej.' },
   { date:'2026-09-08', category:'wyglad', title:'Uproszczono kolumnę „Kto” w dzienniku zdarzeń',
     description:'Usunięto plakietkę rangi przy nazwisku w dzienniku zdarzeń — zostaje samo imię osoby dokonującej zmiany.' },
   { date:'2026-09-08', category:'funkcja', title:'Domyślne przyjście dla pracownika',

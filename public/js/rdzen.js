@@ -153,6 +153,19 @@ async function stSet(key, value){
       });
     }
     S.lastSaveTime = new Date();
+    // Automatyczne oznaczenie "ostatniej zmiany" widocznej dla wszystkich —
+    // przy KAŻDYM prawdziwym zapisie, poza samymi znacznikami
+    // aktywności/obecności, żeby uniknąć nieskończonej pętli.
+    if(key !== 'app:activity' && key !== 'app:presence'){
+      const stamp = {ts: Date.now(), by: S.session ? S.session.displayName : 'system'};
+      if(HAS_ARTIFACT_STORAGE){
+        window.storage.set('app:activity', JSON.stringify(stamp), true).catch(()=>{});
+      } else {
+        fetch('/api/data/app%3Aactivity', {
+          method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({value:stamp})
+        }).catch(()=>{});
+      }
+    }
   }catch(e){ console.error('Błąd zapisu', e); }
   S.saving = false; renderSaveIndicator();
 }

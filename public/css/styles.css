@@ -176,6 +176,7 @@ a{color:inherit;}
 .ticket-name .tag{font-size:11px; color:var(--ink-dim); font-family:'IBM Plex Mono',monospace;}
 .perf{width:0; border-left:2px dashed var(--line-strong); align-self:stretch; margin:8px 0;}
 .ticket-field{flex:1; padding:14px 14px; display:flex; flex-direction:column; gap:4px; min-width:110px;}
+.field-pair{display:flex; flex:2; min-width:0;}
 .ticket-field label{font-size:10px; color:var(--ink-dim); font-family:'IBM Plex Mono',monospace; letter-spacing:0.03em;}
 .ticket-field input[type=time], .ticket-field input[type=text]{
   border:1px solid var(--line-strong); background:var(--bg); color:var(--ink); border-radius:6px; padding:6px 8px; font-family:'IBM Plex Mono',monospace; font-size:13px;
@@ -198,6 +199,11 @@ a{color:inherit;}
 .savedot{width:8px; height:8px; border-radius:50%; background:var(--teal); transition:.3s;}
 .savedot.saving{background:var(--amber); animation:pulse 0.9s infinite;}
 @keyframes pulse{0%{opacity:1;}50%{opacity:0.3;}100%{opacity:1;}}
+.statusbar-info{
+  display:flex; align-items:center; gap:8px; font-size:11px; color:var(--ink-dim); font-family:'IBM Plex Mono',monospace;
+  border-left:1px solid var(--line-strong); padding-left:12px;
+}
+.online-dot{width:7px; height:7px; border-radius:50%; background:var(--teal); box-shadow:0 0 5px var(--teal); display:inline-block; margin-right:4px;}
 
 /* ---------- Modal ---------- */
 .modal-bg{
@@ -253,9 +259,9 @@ a{color:inherit;}
   .brand-sub{ display:none; }
   .savebar .savetxt{ display:none; }
   .top-right{ gap:8px; }
-  .hello{ font-size:12px; }
-  .hello b{ display:block; }
-  .icon-btn{ width:34px; height:34px; }
+  .hello{ font-size:12px; white-space:nowrap; }
+  .icon-btn{ width:34px; height:34px; flex-shrink:0; }
+  .icon-btn svg{ width:16px; height:16px; }
   .rolebadge{ font-size:9px; padding:2px 6px; }
 
   /* Karty "ticket" (wpisywanie godzin, wyjścia, lista pracowników):
@@ -267,6 +273,21 @@ a{color:inherit;}
   .ticket-field:first-of-type{ border-top:none; }
   .ticket-badge{ padding:12px 16px; justify-content:flex-start; }
 
+  /* Pary pól (przyjście+wyjście, domyślne przyjście+wyjście) — zostają
+     obok siebie w dwóch kolumnach zamiast pełnego stackowania */
+  .field-pair{ display:flex; gap:10px; width:100%; border-top:1px solid var(--line); }
+  .field-pair:first-of-type{ border-top:none; }
+  .field-pair .ticket-field{ width:50%; border-top:none; padding:14px 10px; }
+  .field-pair .ticket-field:first-child{ padding-left:14px; }
+  .field-pair .ticket-field:last-child{ padding-right:14px; }
+
+  /* Kompaktowy wiersz (np. lista kodów dostępu) — zostaje w jednym
+     rzędzie zamiast rozjeżdżać się na 3 osobne linie */
+  .ticket-compact{ flex-direction:row !important; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 14px !important; }
+  .ticket-compact .ticket-name, .ticket-compact .ticket-field, .ticket-compact .ticket-badge{
+    width:auto !important; border-top:none !important; padding:0 !important; flex:none;
+  }
+
   /* Wyjścia służbowe: pola w wierszu -> zawijanie zamiast przewijania w bok */
   .trip-item{ flex-wrap:wrap; }
 
@@ -275,4 +296,38 @@ a{color:inherit;}
   .panel-head .row-actions{ width:100%; }
   .row-actions{ width:100%; }
   .row-actions .btn{ flex:1; justify-content:center; }
+
+  /* Eksport/Kopiowanie: funkcja tylko na komputer, na telefonie zbędna */
+  .hide-mobile{ display:none !important; }
+
+  /* Tabele (dziennik zdarzeń, panel użytkowników) -> karty zamiast
+     poziomo przewijanej tabeli, z podpisem kolumny przed każdą wartością */
+  .utable thead{ display:none; }
+  .utable, .utable tbody, .utable tr, .utable td{ display:block; width:100%; }
+  .utable tr{ border:1px solid var(--line); border-radius:10px; margin-bottom:10px; padding:10px 14px; }
+  .utable td{ border-bottom:none !important; padding:6px 0; }
+  .utable td::before{
+    content:attr(data-label); display:block; font-size:10px; color:var(--ink-dim);
+    font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;
+  }
+  .utable td:empty::before{ content:none; }
+  .utable td{ white-space:normal !important; }
+
+  /* Pulpit: drugorzędne linki (panel użytkowników, lista pracowników itd.)
+     chowają się pod rozwijane menu zamiast rzędu przycisków o różnych
+     szerokościach, które łatwo się rozjeżdżają przy większej czcionce */
+  .dash-links{ display:none; }
+  .mobile-menu{ display:block; margin-top:16px; }
+  .mobile-menu summary{
+    cursor:pointer; list-style:none; padding:13px 16px; background:var(--panel);
+    border:1px solid var(--line); border-radius:12px; font-weight:600; font-size:14px;
+  }
+  .mobile-menu summary::-webkit-details-marker{ display:none; }
+  .mobile-menu-list{ margin-top:8px; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .mobile-menu-item{ padding:14px 16px; border-bottom:1px solid var(--line); font-size:14px; }
+  .mobile-menu-item:last-child{ border-bottom:none; }
+  .mobile-menu-item:active{ background:var(--panel-2); }
+}
+@media(min-width:641px){
+  .mobile-menu{ display:none; }
 }

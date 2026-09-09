@@ -194,6 +194,7 @@ async function doLogin(e){
     S.autoPopupShown=false; S.summaryPopupShown=false;
     S.view='dashboard';
     render();
+    sendHeartbeatAndFetchStatus();
   }catch(err){
     console.error(err);
     loginError='Wystąpił nieoczekiwany błąd: '+err.message;
@@ -232,6 +233,7 @@ async function doRegisterWithCode(e){
     await logEvent('Rejestracja przez kod', `Utworzono konto (rola: ${roleLabel(newUser.role)}) przy użyciu kodu ${code}.`);
     toast('Konto utworzone. Witaj, '+name+'!');
     render();
+    sendHeartbeatAndFetchStatus();
   }catch(err){
     console.error(err);
     loginError='Wystąpił nieoczekiwany błąd: '+err.message;
@@ -304,10 +306,10 @@ function renderUserPanel(){
   const me = S.session;
   const rows = S.users.map(u=>`
     <tr>
-      <td>${escapeHtml(u.displayName)}</td>
-      <td class="mono">@${escapeHtml(u.login)}</td>
-      <td>${roleBadge(u.role)}${u.isManager ? ' '+managerBadge() : ''}${isDevAccount(u) ? ' '+devBadge() : ''}</td>
-      <td>
+      <td data-label="Imię">${escapeHtml(u.displayName)}</td>
+      <td class="mono" data-label="Login">@${escapeHtml(u.login)}</td>
+      <td data-label="Ranga">${roleBadge(u.role)}${u.isManager ? ' '+managerBadge() : ''}${isDevAccount(u) ? ' '+devBadge() : ''}</td>
+      <td data-label="Akcje">
         <div class="row-actions">
           ${u.role==='superadmin' ? '<span class="small-note">chroniony</span>' :
             u.id===me.id ? `
@@ -332,7 +334,7 @@ function renderUserPanel(){
 
   const unusedCodes = S.codes.filter(c=>!c.used);
   const codesHtml = unusedCodes.map(c=>`
-    <div class="ticket" style="padding:0;">
+    <div class="ticket ticket-compact" style="padding:0;">
       <div class="ticket-name"><span class="codebox">${c.code}</span></div>
       <div class="ticket-field"><label>RANGA</label><div class="readonly-val" style="font-size:13px;">${roleLabel(c.role)}</div></div>
       <div class="ticket-badge"><button class="btn btn-sm btn-danger" onclick="revokeCode('${c.code}')">Unieważnij</button></div>
